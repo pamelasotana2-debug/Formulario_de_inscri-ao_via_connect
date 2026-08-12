@@ -842,31 +842,41 @@ async function submitForm(){
 
   // Mapeia os nomes dos campos do formulário para colunas snake_case no Supabase
   const payload = {
-    nome_completo: getFieldValue('nomeCompleto'),
-    whatsapp: getFieldValue('whatsapp'),
-    email: getFieldValue('email'),
-    confirmacao: getRadioValue('confirmacao'),
-    empresa: getFieldValue('empresa'),
-    cargo: getFieldValue('cargo'),
-    segmento: getFieldValue('segmento'),
-    tamanho_empresa: getFieldValue('tamanhoEmpresa'),
-    cidade: getFieldValue('cidade'),
-    rede_social: getFieldValue('redeSocial'),
-    relacao: getRadioValue('relacao'),
-    relacao_outro: getFieldValue('relacaoOutroTexto'),
-    como_soube: getRadioValue('comoSoube'),
-    indicacao_nome: getFieldValue('indicacaoNomeTexto'),
-    busca: getCheckboxValues('busca'),
-    busca_outro: getFieldValue('buscaOutroTexto'),
-    busca_detalhe: getFieldValue('buscaDetalhe'),
-    perfil_desejado: getFieldValue('perfilDesejado'),
-    oferece: getFieldValue('oferece'),
-    acompanhado: getRadioValue('acompanhado'),
-    nome_acompanhante: getFieldValue('nomeAcompanhanteTexto'),
-    restricao: getRadioValue('restricao'),
-    restricao_detalhe: getFieldValue('restricaoDetalheTexto'),
-    observacoes: getFieldValue('observacoes')
-  };
+  nome_completo: getFieldValue('nomeCompleto'),
+  whatsapp: getFieldValue('whatsapp'),
+  email: getFieldValue('email'),
+  confirmacao: getRadioValue('confirmacao'),
+
+  empresa: getFieldValue('empresa'),
+  cargo: getFieldValue('cargo'),
+  segmento: getFieldValue('segmento'),
+  tamanho_empresa: getFieldValue('tamanhoEmpresa'),
+  cidade: getFieldValue('cidade'),
+
+  instagram: getFieldValue('instagram'),
+  linkedin: getFieldValue('linkedin'),
+
+  relacao: getRadioValue('relacao'),
+  relacao_outro: getFieldValue('relacaoOutroTexto'),
+
+  como_soube: getRadioValue('comoSoube'),
+  indicacao_nome: getFieldValue('indicacaoNomeTexto'),
+
+  busca: getCheckboxValues('busca'),
+  busca_outro: getFieldValue('buscaOutroTexto'),
+  busca_detalhe: getFieldValue('buscaDetalhe'),
+  perfil_desejado: getFieldValue('perfilDesejado'),
+
+  oferece: getFieldValue('oferece'),
+
+  acompanhado: getRadioValue('acompanhado'),
+  nome_acompanhante: getFieldValue('nomeAcompanhanteTexto'),
+
+  restricao: getRadioValue('restricao'),
+  restricao_detalhe: getFieldValue('restricaoDetalheTexto'),
+
+  observacoes: getFieldValue('observacoes')
+};
 
   console.log('Payload que será enviado ao Supabase:', payload);
 
