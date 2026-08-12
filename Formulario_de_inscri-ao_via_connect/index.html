@@ -761,9 +761,28 @@ function updateStepper(){
 }
 
 function showStep(step){
-  sections.forEach(s => s.classList.toggle('active', parseInt(s.dataset.section) === step));
+  sections.forEach(s => 
+    s.classList.toggle('active', parseInt(s.dataset.section) === step)
+  );
+
   updateStepper();
-  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Aguarda a nova etapa aparecer e leva ao primeiro campo
+  setTimeout(() => {
+    const section = sections[step - 1];
+    if (!section) return;
+
+    const firstField = section.querySelector(
+      'input:not([type="hidden"]), select, textarea, button'
+    );
+
+    if (firstField) {
+      firstField.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }, 100);
 }
 
 function validateStep(step){
