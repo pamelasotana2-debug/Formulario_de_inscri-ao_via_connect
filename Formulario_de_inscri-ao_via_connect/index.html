@@ -857,7 +857,7 @@ async function submitForm(){
 
   try {
     if (!supabaseClient) {
-      throw new Error('Supabase não está configurado corretamente.');
+      throw new Error('Supabase não está configurado.');
     }
 
     const { error } = await supabaseClient
@@ -866,7 +866,7 @@ async function submitForm(){
 
     if (error) throw error;
 
-    form.style.display = 'none';
+  form.style.display = 'none';
     document.querySelector('.stepper-shell').style.display = 'none';
     successPanel.classList.add('active');
   } catch (err) {
