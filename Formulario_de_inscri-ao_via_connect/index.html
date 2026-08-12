@@ -802,6 +802,13 @@ btnNext.addEventListener('click', () => {
   if(currentStep < totalSteps){
     currentStep++;
     showStep(currentStep);
+    requestAnimationFrame(() => {
+      const nextSection = document.querySelector(`.section[data-section="${currentStep}"]`);
+      if (nextSection) {
+        const top = nextSection.getBoundingClientRect().top + window.scrollY - 24;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
   } else {
     submitForm();
   }
@@ -811,6 +818,13 @@ btnBack.addEventListener('click', () => {
   if(currentStep > 1){
     currentStep--;
     showStep(currentStep);
+    requestAnimationFrame(() => {
+      const previousSection = document.querySelector(`.section[data-section="${currentStep}"]`);
+      if (previousSection) {
+        const top = previousSection.getBoundingClientRect().top + window.scrollY - 24;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
   }
 });
 
@@ -835,7 +849,7 @@ async function submitForm(){
   }
 
   const payload = {
-    nome_completo: data.nomeCompleto || null,
+    nome_completo: data.nome || data.nomeCompleto || null,
     whatsapp: data.whatsapp || null,
     email: data.email || null,
     confirmacao: data.confirmacao || null,
