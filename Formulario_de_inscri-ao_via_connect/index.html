@@ -821,13 +821,19 @@ async function submitForm(){
 
   const formData = new FormData(form);
   const data = {};
-  const checkboxNames = new Set(Array.from(form.querySelectorAll('input[type="checkbox"]')).map(el => el.name));
-  checkboxNames.forEach(name => { data[name] = formData.getAll(name).join(', '); });
+
+  const checkboxNames = new Set(
+    Array.from(form.querySelectorAll('input[type="checkbox"]')).map(el => el.name)
+  );
+
+  checkboxNames.forEach(name => {
+    data[name] = formData.getAll(name).join(', ');
+  });
+
   for(const [key, value] of formData.entries()){
     if(!checkboxNames.has(key)) data[key] = value;
   }
 
-  // Mapeia os nomes dos campos do formulário para colunas snake_case no Supabase
   const payload = {
     nome_completo: data.nomeCompleto || null,
     whatsapp: data.whatsapp || null,
@@ -860,22 +866,27 @@ async function submitForm(){
       throw new Error('Supabase não está configurado.');
     }
 
+    if (!SUPABASE_TABLE) {
+      throw new Error('Tabela do Supabase não está configurada.');
+    }
+
     const { error } = await supabaseClient
       .from(SUPABASE_TABLE)
       .insert([payload]);
 
     if (error) throw error;
 
-  form.style.display = 'none';
+    form.style.display = 'none';
     document.querySelector('.stepper-shell').style.display = 'none';
     successPanel.classList.add('active');
+
   } catch (err) {
-  console.error('Erro ao enviar para o Supabase:', err);
-  submitError.textContent = err?.message || 'Não foi possível enviar. Verifique sua conexão e tente novamente.';
-  submitError.style.display = 'block';
-  btnNext.disabled = false;
-  btnNextLabel.textContent = 'Enviar';
-}
+    console.error('Erro ao enviar para o Supabase:', err);
+    submitError.textContent = 'Erro ao enviar: ' + (err?.message || 'Não foi possível enviar.');
+    submitError.style.display = 'block';
+    btnNext.disabled = false;
+    btnNextLabel.textContent = 'Enviar';
+  }
 }
 
 updateStepper();
