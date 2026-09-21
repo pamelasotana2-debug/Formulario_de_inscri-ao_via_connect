@@ -1,9 +1,307 @@
-      if(panel) panel.classList.toggle('show', triggeredIds.has(id));
-    });
-  });
-});
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIA CONNECT · Bertioga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0B0B;
+    --bg-raise:#121212;
+    --bg-field:#181818;
+    --ink:#F5F5F5;
+    --ink-dim:#A5A5A5;
+    --ink-faint:#6B6B6B;
+    --orange:#F36B21;
+    --orange-deep:#c9550f;
+    --orange-dim:#3a2313;
+    --line:#292929;
+    --line-bright:#3a3a3a;
+    --error:#e0433c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+            padding:26px 32px;
+    border-bottom:1px solid var(--line);
+  }
+  .mark{
+    font-family:'Manrope', sans-serif;
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:.14em;
+  }
+  .mark .via{color:var(--orange);}
+  .mark .connect{color:var(--ink);}
+  .topbar .place{
+    font-size:11.5px;
+    color:var(--ink-dim);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
 
-function updateStepper(){
+  .wrap{
+    max-width:600px;
+    margin:0 auto;
+    padding:0 28px 140px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:72px 0 0;
+  }
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--orange);
+    font-weight:700;
+    margin-bottom:26px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .eyebrow::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line-bright);
+  }
+  h1{
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:clamp(30px, 6.2vw, 42px);
+    line-height:1.16;
+    letter-spacing:-.02em;
+    margin-bottom:22px;
+  }
+  h1 em{
+    font-style:normal;
+    font-weight:800;
+    color:var(--orange);
+  }
+  .hero-body{
+    color:var(--ink-dim);
+    font-size:15.5px;
+    max-width:480px;
+    margin-bottom:44px;
+  }
+
+  /* ---------- EVENT INFO LINE ---------- */
+  .event-line{
+    display:flex;
+    flex-wrap:wrap;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    margin-bottom:60px;
+  }
+  .event-item{
+    padding-right:32px;
+    margin-right:32px;
+    border-right:1px solid var(--line);
+  }
+  .event-item:last-child{border-right:none; margin-right:0; padding-right:0;}
+  .event-item .label{
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .event-item .value{
+           letter-spacing:.005em;
+  }
+  .field .req{color:var(--orange); margin-left:2px;}
+  .field .hint{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-bottom:10px;
+    line-height:1.4;
+  }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field textarea,
+  .field select{
+    width:100%;
+    background:var(--bg-field);
+    border:1px solid var(--line);
+    border-radius:3px;
+    color:var(--ink);
+    padding:14px 15px;
+    font-family:inherit;
+    font-size:14.5px;
+    transition:border-color .2s, background .2s;
+  }
+  .field select{
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23F36B21' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 15px center;
+    cursor:pointer;
+  }
+  .field select option{background:var(--bg-raise);}
+  .field textarea{resize:vertical; min-height:80px;}
+  .field input:focus, .field textarea:focus, .field select:focus{
+    outline:none;
+    border-color:var(--orange);
+    background:#1d1a17;
+  }
+  .field input::placeholder, .field textarea::placeholder{color:var(--ink-faint);}
+
+  /* custom radio/checkbox choice cards */
+  .choice-group{display:flex; flex-direction:column; gap:8px;}
+  .choice{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:14px 15px;
+    cursor:pointer;
+    transition:border-color .2s, background .2s;
+    font-size:14px;
+    position:relative;
+  }
+  .choice:hover{border-color:var(--line-bright);}
+  .choice.checked{border-color:var(--orange); background:rgba(243,107,33,0.06);}
+  .choice input{
+    position:absolute;
+    opacity:0;
+    width:0; height:0;
+  }
+  .indicator{
+    width:17px; height:17px;
+    border:1.5px solid var(--ink-faint);
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:border-color .2s, background .2s;
+  }
+  .indicator.round{border-radius:50%;}
+  .indicator.square{border-radius:4px;}
+  .choice.checked .indicator{border-color:var(--orange);}
+  .indicator .dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--orange);
+    opacity:0;
+    transform:scale(0);
+    transition:all .15s ease;
+  }
+  .indicator.square .dot{
+    width:100%; height:100%;
+    border-radius:2px;
+    background:var(--orange);
+  }
+  .choice.checked .dot{opacity:1; transform:scale(1);}
+  .choice .ctext{flex:1;}
+
+  .error-msg{
+    color:var(--error);
+              </div>
+
+      <div class="field" data-required>
+        <label class="field-label">Empresa / negócio que representa<span class="req">*</span></label>
+        <input type="text" name="empresa" placeholder="Nome da empresa">
+        <div class="error-msg">Preencha o nome da empresa.</div>
+      </div>
+
+      <div class="field" data-required>
+        <label class="field-label">Cargo / função<span class="req">*</span></label>
+        <input type="text" name="cargo" placeholder="Ex: Sócio-diretor, Gerente comercial...">
+        <div class="error-msg">Preencha seu cargo ou função.</div>
+      </div>
+
+      <div class="field" data-required>
+        <label class="field-label">Segmento de atuação<span class="req">*</span></label>
+        <select name="segmento">
+          <option value="" disabled selected>Selecione um segmento</option>
+          <option>Comércio / Varejo</option>
+          <option>Serviços</option>
+          <option>Indústria</option>
+          <option>Tecnologia</option>
+          <option>Saúde e bem-estar</option>
+          <option>Educação</option>
+          <option>Alimentação</option>
+          <option>Construção / Imóveis</option>
+          <option>Finanças / Consultoria</option>
+          <option>Outro</option>
+        </select>
+        <div class="error-msg">Selecione um segmento.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Tamanho da empresa</label>
+        <select name="tamanhoEmpresa">
+          <option value="" disabled selected>Selecione uma opção</option>
+          <option>MEI / Autônomo</option>
+          <option>Pequena empresa (até 10 funcionários)</option>
+          <option>Média empresa (11 a 100 funcionários)</option>
+          <option>Grande empresa (mais de 100 funcionários)</option>
+        </select>
+      </div>
+
+      <div class="field" data-required>
+        <label class="field-label">Cidade / região de atuação<span class="req">*</span></label>
+        <input type="text" name="cidade" placeholder="Ex: São Sebastião - SP">
+        <div class="error-msg">Preencha sua cidade ou região.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Instagram ou LinkedIn profissional</label>
+        <div class="hint">Opcional. Informe o perfil que gostaria de compartilhar.</div>
+        <input type="text" name="redeSocial" placeholder="@seuperfil ou link">
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" data-section="3">
+      <div class="section-head">
+        <div class="section-title">Seu relacionamento com o Via Connect</div>
+        <div class="section-sub">Queremos entender como você chegou até nós.</div>
+      </div>
+
+      <div class="field" data-required data-radio-group="relacao">
+        <label class="field-label">Qual é a sua relação com o Via Connect?<span class="req">*</span></label>
+        <div class="choice-group">
+          <label class="choice"><input type="radio" name="relacao" value="Primeira vez"><span class="indicator round"><span class="dot"></span></span><span class="ctext">É a primeira vez que participo</span></label>
+          <label class="choice"><input type="radio" name="relacao" value="Já participei antes"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Já participei de edições anteriores</span></label>
+          <label class="choice"><input type="radio" name="relacao" value="Sou parceiro"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Sou parceiro / apoiador do evento</span></label>
+          <label class="choice"><input type="radio" name="relacao" value="Outro" data-other-trigger="relacaoOutro"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Outro</span></label>
+        </div>
+        <div class="error-msg">Selecione uma opção.</div>
+        <div class="conditional" id="relacaoOutro">
+          <input type="text" name="relacaoOutroTexto" placeholder="Descreva brevemente">
+        </div>
+      </div>
+
+      <div class="field" data-required data-radio-group="comoSoube">
+        <label class="field-label">Como você soube do Via Connect?<span class="req">*</span></label>
+        <div class="choice-group">
+          <label class="choice"><input type="radio" name="comoSoube" value="Indicação de alguém" data-other-trigger="indicacaoNome"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Indicação de alguém</span></label>
+          <label class="choice"><input type="radio" name="comoSoube" value="Redes sociais"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Redes sociais</span></label>
+          <label class="choice"><input type="radio" name="comoSoube" value="Pesquisa própria"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Pesquisa própria</span></label>
+          <label class="choice"><input type="radio" name="comoSoube" value="Outro" data-other-trigger="indicacaoNome"><span class="indicator round"><span class="dot"></span></span><span class="ctext">Outro</span></label>
+        </div>
+        <div class="error-msg">Selecione uma opção.</div>
+        <div class="conditional" id="indicacaoNome">
+          <label class="sublabel">Se foi indicação, informe o nome de quem indicou. Se foi outro meio, descreva onde nos conheceu.</label>
+          <input type="text" name="indicacaoNomeTexto" placeholder="Nome ou origem">
+        </div>
+      </div>
+    </div>
+
+        function updateStepper(){
   progressFill.style.width = ((currentStep - 1) / (totalSteps - 1) * 80 + 20) + '%';
   stepCurrentEl.textContent = currentStep;
   stepNameEl.textContent = stepNames[currentStep];
@@ -78,7 +376,7 @@ async function submitForm(){
     instagram:getFieldValue('instagram'), linkedin:getFieldValue('linkedin'), relacao:getRadioValue('relacao'), relacao_outro:getFieldValue('relacaoOutroTexto'),
     como_soube:getRadioValue('comoSoube'), indicacao_nome:getFieldValue('indicacaoNomeTexto'), busca:getCheckboxValues('busca'), busca_outro:getFieldValue('buscaOutroTexto'),
     busca_detalhe:getFieldValue('buscaDetalhe'), perfil_desejado:getFieldValue('perfilDesejado'), oferece:getFieldValue('oferece'), acompanhado:getRadioValue('acompanhado'),
-    nome_acompanhante:getFieldValue('nomeAcompanhanteTexto'), restricao:getRadioValue('restricao'), restricao_detalhe:getFieldValue('restricaoDetalheTexto'), observacoes:getFieldValue('observacoes')
+    nome_acompanhante:getFieldValue('nomeAcompanhanteTexto'), observacoes:(()=>{const obs=getFieldValue('observacoes'); const proximo=form.querySelector('input[name="proximoEvento"]:checked'); return proximo ? (obs ? `${obs} | Me chame para o próximo evento` : 'Me chame para o próximo evento') : obs;})()
   };
 
   try{
